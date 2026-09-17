@@ -1,1 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Daily Learning Dashboard</title>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f6f9;
+    color: #263238;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.header {
+    background: #07558c;
+    color: white;
+    padding: 22px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+}
+
+
+/* =========================
+   MAIN DASHBOARD
+   ========================= */
+
+.dashboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* =========================
+   DATE CARD
+   ========================= */
+
+.date-card {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.date-card strong {
+    color: #07558c;
+}
+
+
+/* =========================
+   TOP CARDS
+   ========================= */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #2fa7dc;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.card-number {
+    font-size: 34px;
+    font-weight: bold;
+}
+
+.card-title {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   MAIN CHART AREA
+   ========================= */
+
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.chart-title {
+    font-size: 19px;
+    font-weight: bold;
+    color: #07558c;
+    margin-bottom: 5px;
+}
+
+
+/* =========================
+   LEARNING SECTION
+   ========================= */
+
+.learning-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.learning-box h2 {
+    color: #07558c;
+    margin-top: 0;
+}
+
+.instruction {
+    background: #eef6fb;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media(max-width: 750px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+        font-size: 21px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+     ========================= -->
+
+<div class="header">
+
+    <h1>
+        Daily Learning Dashboard
+    </h1>
+
+    <p>
+        Gandhi Fellowship - Patna
+    </p>
+
+</div>
+
+
+<div class="dashboard">
+
+
+<!-- =========================
+     DATE
+     ========================= -->
+
+<div class="date-card">
+
+    <strong>Date:</strong>
+    05 August 2026
+
+    <br><br>
+
+    <strong>Focus:</strong>
+    Filaria, TAS-1 and Community Engagement
+
+</div>
+
+
+<!-- =========================
+     SUMMARY CARDS
+     ========================= -->
+
+<div class="cards">
+
+
+    <div class="card">
+
+        <div class="card-number">
+            5
+        </div>
+
+        <div class="card-title">
+            Fellows Reflected
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-number">
+            5
+        </div>
+
+        <div class="card-title">
+            Individual Learnings
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-number">
+            3
+        </div>
+
+        <div class="card-title">
+            Key Learning Themes
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CHARTS
+     ========================= -->
+
+<div class="charts">
+
+
+    <!-- MAIN LEARNING CHART -->
+
+    <div class="chart-box">
+
+        <div class="chart-title">
+            Fellows & Their Learning
+        </div>
+
+        <div id="learningChart"></div>
+
+    </div>
+
+
+    <!-- PERCENTAGE CHART -->
+
+    <div class="chart-box">
+
+        <div class="chart-title">
+            Learning Progress (%)
+        </div>
+
+        <div id="percentageChart"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LEARNING INSTRUCTION
+     ========================= -->
+
+<div class="learning-box">
+
+    <h2>
+        Individual Learning
+    </h2>
+
+    <div class="instruction">
+
+        💡 Move your cursor over a fellow's name
+        or chart section to see their individual learning.
+
+    </div>
+
+    <div id="learningDetails"></div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   DATA FOR 05 AUGUST 2026
+   ========================================================= */
+
+
+/* Fellow names */
+
+const names = [
+
+    "Komal",
+    "Rajdeep",
+    "Amit",
+    "Vinay",
+    "Probali"
+
+];
+
+
+/* Learning percentage
+
+   IMPORTANT:
+   These are SAMPLE values.
+   Change them according to your own assessment.
+*/
+
+const learningPercentage = [
+
+    80,
+    75,
+    85,
+    70,
+    80
+
+];
+
+
+/* Individual learning */
+
+const learning = [
+
+    "The visit provided practical exposure beyond theoretical knowledge. Gained a better understanding by observing the actual field processes.",
+
+    "Learned effective ways to create awareness within the community and understood the importance of community engagement in disease prevention.",
+
+    "Learned that although the demonstration was conducted on an adult, the actual TAS-1 survey is carried out among Class I and Class II students. Wants to develop stronger community engagement skills and confidence in interacting with the community.",
+
+    "Understood that interacting with the community can make the learning experience more interesting and expected to gain deeper practical knowledge through field interactions.",
+
+    "Gained a clear understanding of how the entire TAS-1 process works and expressed interest in applying the learning during field visits."
+
+];
+
+
+/* =========================================================
+   MAIN LEARNING CHART
+   ========================================================= */
+
+Plotly.newPlot(
+
+    "learningChart",
+
+    [{
+
+        x: names,
+
+        y: learningPercentage,
+
+        type: "bar",
+
+        customdata: learning,
+
+        hovertemplate:
+
+            "<b>%{x}</b><br><br>" +
+
+            "<b>Learning:</b><br>" +
+
+            "%{customdata}<br><br>" +
+
+            "<b>Learning %:</b> %{y}%" +
+
+            "<extra></extra>"
+
+    }],
+
+    {
+
+        height: 430,
+
+        margin: {
+            t: 20,
+            b: 90,
+            l: 50,
+            r: 20
+        },
+
+        yaxis: {
+
+            title: "Learning (%)",
+
+            range: [0,100]
+
+        },
+
+        xaxis: {
+
+            title: "Fellows"
+
+        },
+
+        plot_bgcolor: "white",
+
+        paper_bgcolor: "white"
+
+    },
+
+    {
+        responsive: true
+    }
+
+);
+
+
+/* =========================================================
+   PERCENTAGE DONUT
+   ========================================================= */
+
+Plotly.newPlot(
+
+    "percentageChart",
+
+    [{
+
+        labels: names,
+
+        values: learningPercentage,
+
+        type: "pie",
+
+        hole: 0.55,
+
+        customdata: learning,
+
+        hovertemplate:
+
+            "<b>%{label}</b><br>" +
+
+            "Learning: %{value}%<br><br>" +
+
+            "<b>Learning:</b><br>" +
+
+            "%{customdata}" +
+
+            "<extra></extra>"
+
+    }],
+
+    {
+
+        height: 430,
+
+        margin: {
+            t: 20,
+            b: 20,
+            l: 20,
+            r: 20
+        },
+
+        showlegend: true
+
+    },
+
+    {
+        responsive: true
+    }
+
+);
+
+
+/* =========================================================
+   LEARNING DETAILS
+   ========================================================= */
+
+let details = "";
+
+for (let i = 0; i < names.length; i++) {
+
+    details += `
+
+        <div style="
+            padding:15px;
+            margin-bottom:10px;
+            border-left:5px solid #2fa7dc;
+            background:#f7fafc;
+            border-radius:5px;
+        ">
+
+            <strong style="
+                color:#07558c;
+                font-size:18px;
+            ">
+
+                ${names[i]}
+
+            </strong>
+
+            <br><br>
+
+            ${learning[i]}
+
+        </div>
+
+    `;
+
+}
+
+document.getElementById("learningDetails").innerHTML = details;
+
+
+</script>
+
+
+</body>
+
+  </html>
